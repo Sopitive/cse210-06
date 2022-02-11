@@ -8,6 +8,7 @@ from game.scripting.action import Action
 from game.shared.point import Point
 import pyray
 import pyray
+import random
 
 
 class HandleCollisionsAction(Action):
@@ -113,7 +114,7 @@ class HandleCollisionsAction(Action):
             if self._paddle_scorer == "right":
                 score_right.add_points(1)
             ball = cast.get_first_actor("ball")
-            ball.set_position(Point(constants.MAX_X//2, constants.MAX_Y // 2))
+            ball.set_position(Point(constants.MAX_X // 2, random.randrange(10, constants.MAX_Y - 10)))
             self._is_round_over = False
             # TODO: if game is over, set _game_is_over to True and select a winner
 

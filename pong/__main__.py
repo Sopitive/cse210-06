@@ -34,8 +34,8 @@ def main():
     """
     The entry point of the program
     """
-    paddle1 = Paddle(Point(10, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.RED)
-    paddle2 = Paddle(Point(constants.MAX_X - 20, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.GREEN)
+    paddle1 = Paddle(Point(10, constants.MAX_Y//2 - constants.PADDLE_HEIGHT), constants.RED)
+    paddle2 = Paddle(Point(constants.MAX_X - 20, constants.MAX_Y//2 - constants.PADDLE_HEIGHT), constants.GREEN)
 
     angle_choices = [random.uniform(15,60), random.uniform(120,165), random.uniform(195, 240), random.uniform(300,345)]
     angle = random.choice(angle_choices)
@@ -44,8 +44,8 @@ def main():
 
     ball = Ball()
     ball.set_color(constants.WHITE)
-    ball.set_position(Point(constants.MAX_X // 2, constants.MAX_Y // 2))
-    ball.set_radius(6)
+    ball.set_position(Point(constants.MAX_X // 2, random.randrange(10, constants.MAX_Y - 10))) 
+    ball.set_radius(constants.BALL_RADIUS)
     vel = Point(x,y).scale(constants.BALL_SPEED)
     print(vel.get_x(), vel.get_y())
     ball.set_velocity(vel)
@@ -72,11 +72,9 @@ def main():
     script.add_action("output", DrawActorsAction(video_service))
     script.add_action("output", PlaySoundsAction(sound_service))
 
-    score_left = Score()
     score_left.set_position(Point(constants.MAX_X // 2 - 30, 10))
     score_left.set_text("0")
 
-    score_right = Score()
     score_right.set_position(Point(constants.MAX_X // 2 + 30, 10))
     score_right.set_text("0")
     

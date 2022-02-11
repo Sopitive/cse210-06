@@ -11,6 +11,7 @@ class Ball(Actor):
     space.
 
     Attributes:
+        _radius (int): The radius of the ball
         _text (string): The text to display
         _font_size (int): The font size to use.
         _color (Color): The color of the text.
