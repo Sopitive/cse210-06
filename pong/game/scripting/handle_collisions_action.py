@@ -7,8 +7,9 @@ from game.casting.actor import Actor
 from game.scripting.action import Action
 from game.shared.point import Point
 import pyray
-import pyray
 import random
+import time
+import threading
 
 
 class HandleCollisionsAction(Action):
@@ -47,6 +48,7 @@ class HandleCollisionsAction(Action):
             self._handle_ball_collision(cast)
             self._handle_round_over(cast)
             self._handle_game_over(cast)
+            
 
 
     def _handle_ball_collision(self, cast):
@@ -57,14 +59,13 @@ class HandleCollisionsAction(Action):
             second (Cast): The second paddle.
 
         """
+        
         # Reference ball and paddles from cast
         ball = cast.get_first_actor("ball")
         left, right = cast.get_actors("paddles")
 
         hit = False
-        self._edges_collision = False
-        self._paddles_collision = False
-        self._lost_round = False
+        
 
         #Check collision between ball and left paddle
         if pyray.check_collision_circle_rec(ball.get_position().to_tuple(), ball.get_radius(), left.get_rectangle()):
@@ -81,6 +82,7 @@ class HandleCollisionsAction(Action):
             normal = Point(0, 1)
             hit = True
             self._edges_collision = True
+            print(self._edges_collision)
         #Check collision between ball and bottom of the screen
         if ball.get_position().get_y() + ball.get_radius() >= constants.MAX_Y:
             normal = Point(0, -1)
@@ -97,10 +99,12 @@ class HandleCollisionsAction(Action):
         if ball.get_position().get_x() - ball.get_radius() <= 0:
             self._is_round_over = True
             self._paddle_scorer = "right"
+            self._lost_round = True
         #Left player scores
         if ball.get_position().get_x() + ball.get_radius() >= constants.MAX_X:
             self._is_round_over = True
             self._paddle_scorer = "left"
+            self._lost_round = True
 
 
     def _handle_round_over(self, cast):
@@ -172,14 +176,20 @@ class HandleCollisionsAction(Action):
                 for paddle in paddles:
                     paddle.set_color(constants.WHITE)
 
-    
+
     def get_paddle_collided(self):
-        return self._paddles_collision
+        result = self._paddles_collision
+        self._paddles_collision = False
+        return result
     
     def get_edges_collision(self): 
-        return self._edges_collision
+        result = self._edges_collision
+        self._edges_collision = False
+        return result
 
     def get_lost_round(self): 
-        return self._lost_round
+        result = self._lost_round
+        self._lost_round = False
+        return result
 
 

@@ -13,6 +13,9 @@ class PlaySoundsAction(Action):
         
         """
         self._sound_service = sound_service
+        self._edges_collision = False
+        self._paddles_collision = False
+        self._lost_round = False
         self._collisions = HandleCollisionsAction()
 
     
@@ -26,11 +29,16 @@ class PlaySoundsAction(Action):
         """
         self._collisions.execute(cast, script)
         
+        self._edges_collision = self._collisions.get_edges_collision()
+        self._lost_round = self._collisions.get_lost_round()
+        self._paddles_collision = self._collisions.get_paddle_collided()
 
-        if self._collisions.get_edges_collision:
+        if self._edges_collision:
             self._edges_collided_sound()
-        if self._collisions.get_paddle_collided:
+        if self._paddles_collision:
             self._paddle_collided_sound()
+        if self._lost_round: 
+            self._lost_sound()
 
         
 
