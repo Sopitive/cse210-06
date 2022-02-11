@@ -7,6 +7,7 @@ from game.casting.cast import Cast
 from game.casting.paddle import Paddle
 from game.casting.actor import Actor
 from game.casting.ball import Ball
+from game.casting.score import Score
 
 from game.scripting.play_sounds_action import PlaySoundsAction
 from game.scripting.control_player1_action import ControlPlayer1Action
@@ -51,6 +52,14 @@ def main():
     script.add_action("update", HandleCollisionsAction())
     script.add_action("output", DrawActorsAction(video_service))
     script.add_action("output", PlaySoundsAction(sound_service))
+
+    score_left = Score()
+    score_left.set_position(Point(constants.MAX_X // 2 - 30, 10))
+    score_left.set_text("0")
+
+    score_right = Score()
+    score_right.set_position(Point(constants.MAX_X // 2 + 30, 10))
+    score_right.set_text("0")
     
     director = Director(video_service)
     director.start_game(cast, script)
