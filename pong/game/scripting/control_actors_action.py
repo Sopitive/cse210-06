@@ -23,7 +23,6 @@ class ControlActorsAction(Action):
             keyboard_service (KeyboardService): An instance of KeyboardService.
         """
         self._keyboard_service = keyboard_service
-        # self._direction = Point(0, constants.CELL_SIZE)
 
     def is_control_down(self, control):
         """
@@ -48,14 +47,11 @@ class ControlActorsAction(Action):
 
         # up
         if self.is_control_down("up"):
-            # self._direction = Point(0, -constants.CELL_SIZE)
             direction = Point(0, -constants.CELL_SIZE)
 
         # down
         if self.is_control_down("down"):
-            # self._direction = Point(0, constants.CELL_SIZE)
             direction = Point(0, constants.CELL_SIZE)
 
         paddle = self.get_paddle(cast)
         paddle.set_velocity(direction)
-        # paddle.turn_head(self._direction)

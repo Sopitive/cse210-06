@@ -1,5 +1,5 @@
-""" 
-A module for constants used by the game 
+"""
+A module for constants used by the game
 """
 
 
@@ -16,6 +16,8 @@ FRAME_RATE = 45
 FONT_SIZE = 15
 CAPTION = "paddle"
 BALL_SPEED = 5
+PADDLE_WIDTH = 5
+PADDLE_HEIGHT = 100
 WHITE = Color(255, 255, 255)
 RED = Color(255, 0, 0)
 YELLOW = Color(255, 255, 0)

@@ -1,6 +1,7 @@
 """
 A module that contains the Handle Collisions Action Class
 """
+from operator import truediv
 import constants
 from game.casting.actor import Actor
 from game.scripting.action import Action
@@ -23,6 +24,8 @@ class HandleCollisionsAction(Action):
     def __init__(self):
         """Constructs a new HandleCollisionsAction."""
         self._is_game_over = False
+        self._is_round_over = False
+        self._paddle_scorer = "left"
         self.winner = 0
 
     def get_game_over(self):
@@ -38,50 +41,72 @@ class HandleCollisionsAction(Action):
         """
         if not self._is_game_over:
             self._handle_ball_collision(cast)
+            self._handle_round_over(cast)
             self._handle_game_over(cast)
 
+
     def _handle_ball_collision(self, cast):
-        """ Handles whether the ball has collided with the wall or paddle. 
+        """ Handles whether the ball has collided with the wall or paddle.
 
         Args:
             first (Cast): The first paddle.
             second (Cast): The second paddle.
 
         """
+        # Reference ball and paddles from cast
         ball = cast.get_first_actor("ball")
         left, right = cast.get_actors("paddles")
 
-        hit = False 
+        hit = False
+
+        #Check collision between ball and left paddle
         if pyray.check_collision_circle_rec(ball.get_position().to_tuple(), ball.get_radius(), left.get_rectangle()):
             normal = Point(1, 0)
             hit = True
+        #Check collision between ball and right paddle
         if pyray.check_collision_circle_rec(ball.get_position().to_tuple(), ball.get_radius(), right.get_rectangle()):
             normal = Point(-1,0)
             hit = True
+        #Check collision between ball and top of the screen
+        if ball.get_position().get_y() - ball.get_radius() <= 0:
+            normal = Point(0, 1)
+            hit = True
+        #Check collision between ball and bottom of the screen
+        if ball.get_position().get_y() + ball.get_radius() >= constants.MAX_Y:
+            normal = Point(0, -1)
+            hit = True
+        #Changes direction if it hits paddle or top/bottom
         if hit:
             velocity = ball.get_velocity()
             velocity = velocity.reflect(normal)
             ball.set_velocity(velocity)
-        
+            ball.move_next()
 
-    def _handle_screen_collision(self, cast):
-        """Sets the game over flag if the paddles collides with the top and bottom of the screen.
+        #Right player scores
+        if ball.get_position().get_x() - ball.get_radius() <= 0:
+            self._is_round_over = True
+            self._paddle_scorer = "right"
+        #Left player scores
+        if ball.get_position().get_x() + ball.get_radius() >= constants.MAX_X:
+            self._is_round_over = True
+            self._paddle_scorer = "left"
 
-        Args:
-            cast (Cast): The cast of Actors in the game.
+
+    def _handle_round_over(self, cast):
         """
-        
-        paddle1, paddle2 = cast.get_actors("paddles")
-        if self._handle_screen_collision(paddle1, paddle2):
-            # paddle 1 lost
-            self.winner = 2
-        elif self._handle_paddle_collision(paddle2, paddle1):
-            # paddle 2 lost
-            self.winner = 1
+        Adds to score and resets the Ball if it hits either side of the screen, starting a new round.
+        """
+        if self._is_round_over:
+            score_left, score_right = cast.get_actors("scores")
+            if self._paddle_scorer == "left":
+                score_left.add_points(1)
+            if self._paddle_scorer == "right":
+                score_right.add_points(1)
+            ball = cast.get_first_actor("ball")
+            ball.set_position(Point(constants.MAX_X//2, constants.MAX_Y // 2))
+            self._is_round_over = False
+            # TODO: if game is over, set _game_is_over to True and select a winner
 
-        # paddle = cast.get_first_actor("paddles")
-        # head = paddle.get_segments()[0]
-        # segments = paddle.get_segments()[1:]
 
     def _handle_game_over(self, cast):
         """Shows the 'game over' message and turns the paddles white if the game is over.
@@ -96,7 +121,7 @@ class HandleCollisionsAction(Action):
             position = Point(x, y)
 
             message = Actor()
-            message.set_text(f"Game Over! paddle {self.winner} won!")
+            message.set_text(f"Game Over! Paddle {self.winner} won!")
             message.set_position(position)
             message.set_color(constants.RED)
             message.set_font_size(40)
@@ -105,12 +130,9 @@ class HandleCollisionsAction(Action):
             paddles = cast.get_actors("paddles")
             for paddle in paddles:
                 paddle.set_color(constants.WHITE)
-                # segments = paddle.get_segments()
                 for paddle in paddles:
                     paddle.set_color(constants.WHITE)
 
-            # for segment in segments:
-            #     segment.set_color(constants.WHITE)
 
 
     def _handle_game_over(self, cast):
@@ -126,7 +148,7 @@ class HandleCollisionsAction(Action):
             position = Point(x, y)
 
             message = Actor()
-            message.set_text(f"Game Over! paddle {self.winner} won!")
+            message.set_text(f"Game Over! Paddle {self.winner} won!")
             message.set_position(position)
             message.set_color(constants.RED)
             message.set_font_size(40)

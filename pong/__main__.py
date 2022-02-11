@@ -34,10 +34,9 @@ def main():
     """
     The entry point of the program
     """
-    paddle1 = Paddle(Point(10, constants.MAX_Y//2), constants.RED)
-    paddle2 = Paddle(Point(constants.MAX_X - 20, constants.MAX_Y//2), constants.GREEN)
+    paddle1 = Paddle(Point(10, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.RED)
+    paddle2 = Paddle(Point(constants.MAX_X - 20, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.GREEN)
 
-    # need to add starting ball angle
     angle_choices = [random.uniform(15,60), random.uniform(120,165), random.uniform(195, 240), random.uniform(300,345)]
     angle = random.choice(angle_choices)
     x = math.cos(math.radians(angle))
@@ -54,14 +53,17 @@ def main():
     cast = Cast()
     cast.add_actor("paddles", paddle1)
     cast.add_actor("paddles", paddle2)
-    cast.add_actor("ball", ball) 
-    cast.add_actor("scores", Score()) 
+    cast.add_actor("ball", ball)
 
-    # start the game
+    score_left = Score()
+    score_right = Score()
+    cast.add_actor("scores", score_left)
+    cast.add_actor("scores", score_right)
+
     keyboard_service = KeyboardService()
     video_service = VideoService()
     sound_service = SoundService(constants.ROOT_DIR)
-    
+
     script = Script()
     script.add_action("input", ControlPlayer2Action(keyboard_service))
     script.add_action("input", ControlPlayer1Action(keyboard_service))
@@ -69,7 +71,7 @@ def main():
     script.add_action("update", HandleCollisionsAction())
     script.add_action("output", DrawActorsAction(video_service))
     script.add_action("output", PlaySoundsAction(sound_service))
-    
+
     director = Director(video_service)
     director.start_game(cast, script)
 
