@@ -17,14 +17,15 @@ class SoundService:
         self._load_sound = ""
 
     def load_sound(self, sound):
+        """Loads a sound from the sounds directory"""
         return pyray.load_sound(f"{self._root_dir}\\{sound}")
 
     def play_sound(self, sound):
-        """ Play a sound from the sounds directory. 
-        
+        """ Play a sound from the sounds directory.
+
         Args:
             sound (string): The name of the sound file to be played.
-        
+
         """
         sound = load_sound(sound)
         threading.Thread(target=pyray.play_sound, args=(f"{self._root_dir}\\sounds\{sound}",), daemon=True).start()

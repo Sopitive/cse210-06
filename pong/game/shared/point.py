@@ -85,10 +85,15 @@ class Point:
         return Point(self._x * factor, self._y * factor)
 
     def to_tuple(self):
+        """
+        Creates a tuple from a position on the grid
+        """
         return (self._x, self._y)
 
     def reflect(self, normal):
-        # R1 - 2 N (R1 . N)
+        """
+        Reflects the direction about the normal using the formula: R1 - 2 N (R1 . N)
+        """
         dot = self.get_x() * normal.get_x() + self.get_y() * normal.get_y()
         x = self.get_x() - 2 * normal.get_x() * dot
         y = self.get_y() - 2 * normal.get_y() * dot
