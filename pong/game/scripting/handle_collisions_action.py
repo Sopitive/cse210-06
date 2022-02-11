@@ -26,7 +26,10 @@ class HandleCollisionsAction(Action):
         self._is_game_over = False
         self._is_round_over = False
         self._paddle_scorer = "left"
-        self.winner = 0
+        self._winner = 0
+        self._edges_collision = False
+        self._paddles_collision = False
+        self._lost_round = False
 
     def get_game_over(self):
         """ Gets whether or not the game is over"""
@@ -58,23 +61,30 @@ class HandleCollisionsAction(Action):
         left, right = cast.get_actors("paddles")
 
         hit = False
+        self._edges_collision = False
+        self._paddles_collision = False
+        self._lost_round = False
 
         #Check collision between ball and left paddle
         if pyray.check_collision_circle_rec(ball.get_position().to_tuple(), ball.get_radius(), left.get_rectangle()):
             normal = Point(1, 0)
             hit = True
+            self._paddles_collision = True
         #Check collision between ball and right paddle
         if pyray.check_collision_circle_rec(ball.get_position().to_tuple(), ball.get_radius(), right.get_rectangle()):
             normal = Point(-1,0)
             hit = True
+            self._paddles_collision = True
         #Check collision between ball and top of the screen
         if ball.get_position().get_y() - ball.get_radius() <= 0:
             normal = Point(0, 1)
             hit = True
+            self._edges_collision = True
         #Check collision between ball and bottom of the screen
         if ball.get_position().get_y() + ball.get_radius() >= constants.MAX_Y:
             normal = Point(0, -1)
             hit = True
+            self._edges_collision = True
         #Changes direction if it hits paddle or top/bottom
         if hit:
             velocity = ball.get_velocity()
@@ -160,5 +170,15 @@ class HandleCollisionsAction(Action):
                 # segments = paddle.get_segments()
                 for paddle in paddles:
                     paddle.set_color(constants.WHITE)
+
+    
+    def get_paddle_collided(self):
+        return self._paddles_collision
+    
+    def get_edges_collision(self): 
+        return self._edges_collision
+
+    def get_lost_round(self): 
+        return self._lost_round
 
 
