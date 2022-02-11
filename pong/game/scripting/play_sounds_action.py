@@ -13,9 +13,7 @@ class PlaySoundsAction(Action):
         
         """
         self._sound_service = sound_service
-        self._is_game_over = False
         self._collisions = HandleCollisionsAction()
-        self._won_played = False
 
     
     def execute(self, cast, script):
@@ -27,22 +25,26 @@ class PlaySoundsAction(Action):
         
         """
         self._collisions.execute(cast, script)
-        self._is_game_over = self._collisions.get_game_over()
-        if self._is_game_over and not self._won_played:
-            self._game_over()
-            self._won_played = True
-        elif not self._is_game_over:
-            self._ambient_sound()
+        
+
+        if self._collisions.get_edges_collision:
+            self._edges_collided_sound()
+        if self._collisions.get_paddle_collided:
+            self._paddle_collided_sound()
 
         
 
-    def _game_over(self):
-        """ Sound to play when the game has ended. """
-        self._sound_service.play_sound("won.wav")
+    def _edges_collided_sound(self):
+        """ The sound to play when the ball has collided with the top or bottom of the screen. """
+        self._sound_service.play_sound("edges.wav", volume=0.5)
 
-    def _ambient_sound(self):
-        """ The sound to play when the game has not ended. """
-        self._sound_service.play_sound("tap.wav")
+    def _paddle_collided_sound(self):
+        """ The sound to play when the ball has collided with one of the paddles. """
+        self._sound_service.play_sound("paddles.wav", volume=0.5)
+
+    def _lost_sound(self):
+        """ The sound to play when the ball has collided with the left or right of the screen. """
+        self._sound_service.play_sound("lost.wav", volume=0.5)
     
        
 

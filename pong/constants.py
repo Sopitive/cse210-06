@@ -1,5 +1,5 @@
-""" 
-A module for constants used by the game 
+"""
+A module for constants used by the game
 """
 
 
@@ -9,13 +9,15 @@ import os
 
 COLUMNS = 40
 ROWS = 20
-CELL_SIZE = 15
+CELL_SIZE = 8
 MAX_X = 900
 MAX_Y = 600
-FRAME_RATE = 8
+FRAME_RATE = 45
 FONT_SIZE = 15
 CAPTION = "paddle"
-#paddle_LENGTH = 8
+BALL_SPEED = 10
+PADDLE_WIDTH = 5
+PADDLE_HEIGHT = 25
 WHITE = Color(255, 255, 255)
 RED = Color(255, 0, 0)
 YELLOW = Color(255, 255, 0)

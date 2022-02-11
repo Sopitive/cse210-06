@@ -25,4 +25,7 @@ class MoveActorsAction(Action):
         paddles = cast.get_actors("paddles")
         for paddle in paddles:
             paddle.move_next()
-            paddle.grow_tail(1)
+            # paddle.grow_tail(1)
+
+        ball = cast.get_first_actor("ball")
+        ball.move_next()

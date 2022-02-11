@@ -2,6 +2,8 @@
 A module that begins the game
 """
 import constants
+import math
+import random
 
 from game.casting.cast import Cast
 from game.casting.paddle import Paddle
@@ -32,19 +34,36 @@ def main():
     """
     The entry point of the program
     """
-    paddle1 = paddle(Point(constants.MAX_X//4, constants.MAX_Y//2), constants.RED)
-    paddle2 = paddle(Point(3*constants.MAX_X//4, constants.MAX_Y//2), constants.GREEN)
+    paddle1 = Paddle(Point(10, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.RED)
+    paddle2 = Paddle(Point(constants.MAX_X - 20, constants.MAX_Y//2 - constants.PADDLE_HEIGHT//2), constants.GREEN)
+
+    angle_choices = [random.uniform(15,60), random.uniform(120,165), random.uniform(195, 240), random.uniform(300,345)]
+    angle = random.choice(angle_choices)
+    x = math.cos(math.radians(angle))
+    y = math.sin(math.radians(angle))
+
+    ball = Ball()
+    ball.set_color(constants.WHITE)
+    ball.set_position(Point(constants.MAX_X // 2, constants.MAX_Y // 2))
+    ball.set_radius(6)
+    vel = Point(x,y).scale(constants.BALL_SPEED)
+    print(vel.get_x(), vel.get_y())
+    ball.set_velocity(vel)
 
     cast = Cast()
     cast.add_actor("paddles", paddle1)
-    cast.add_actor("paddles", paddle2) 
-    cast.add_actor("scores", Score()) 
+    cast.add_actor("paddles", paddle2)
+    cast.add_actor("ball", ball)
 
-    # start the game
+    score_left = Score()
+    score_right = Score()
+    cast.add_actor("scores", score_left)
+    cast.add_actor("scores", score_right)
+
     keyboard_service = KeyboardService()
     video_service = VideoService()
     sound_service = SoundService(constants.ROOT_DIR)
-    
+
     script = Script()
     script.add_action("input", ControlPlayer2Action(keyboard_service))
     script.add_action("input", ControlPlayer1Action(keyboard_service))

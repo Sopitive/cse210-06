@@ -23,7 +23,6 @@ class ControlActorsAction(Action):
             keyboard_service (KeyboardService): An instance of KeyboardService.
         """
         self._keyboard_service = keyboard_service
-        self._direction = Point(0, constants.CELL_SIZE)
 
     def is_control_down(self, control):
         """
@@ -44,20 +43,15 @@ class ControlActorsAction(Action):
             cast (Cast): The cast of Actors in the game.
             script (Script): The script of Actions in the game.
         """
-        # left
-        if self.is_control_down("left"):
-            self._direction = Point(-constants.CELL_SIZE, 0)
-
-        # right
-        if self.is_control_down("right"):
-            self._direction = Point(constants.CELL_SIZE, 0)
+        direction = Point(0, 0)
 
         # up
         if self.is_control_down("up"):
-            self._direction = Point(0, -constants.CELL_SIZE)
+            direction = Point(0, -constants.CELL_SIZE)
 
         # down
         if self.is_control_down("down"):
-            self._direction = Point(0, constants.CELL_SIZE)
+            direction = Point(0, constants.CELL_SIZE)
+
         paddle = self.get_paddle(cast)
-        paddle.turn_head(self._direction)
+        paddle.set_velocity(direction)
