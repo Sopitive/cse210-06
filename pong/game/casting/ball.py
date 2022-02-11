@@ -17,3 +17,19 @@ class Ball(Actor):
         _position (Point): The screen coordinates.
         _velocity (Point): The speed and direction.
     """
+    def __init__ (self):
+        """
+        Constructs a new Ball.
+        """
+        self._radius = 0
+
+    def set_radius(self, value):
+        """
+        """
+        self._radius = value
+
+    def get_radius(self):
+        """
+        """
+        return self._radius
+    

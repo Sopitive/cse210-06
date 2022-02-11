@@ -83,3 +83,13 @@ class Point:
             Point: A new Point that is scaled.
         """
         return Point(self._x * factor, self._y * factor)
+
+    def to_tuple(self):
+        return (self._x, self._y)
+
+    def reflect(self, normal):
+        # 2 N (R1 . N) - R1
+        dot = self.get_x() * normal.get_x() + self.get_y() * normal.get_y()
+        x = 2 * normal.get_x() * dot - self.get_x()
+        y = 2 * normal.get_y() * dot - self.get_y()
+        return Point(x, y)

@@ -4,10 +4,15 @@ A module that contains the Control Player 1 Action class
 from game.scripting.control_actors_action import ControlActorsAction
 
 class ControlPlayer1Action(ControlActorsAction):
+    """ Defines controls that allow player 1 to move. """
     def is_control_down(self, control):
+        """ Checks if the keys w or s are pressed. 
+        
+        Args:
+            control:
+        
+        """
         controls = {
-            "left": "a",
-            "right": "d",
             "up": "w",
             "down":"s"
         }

@@ -1,7 +1,7 @@
 """
 module for sound service
 """
-from playsound import playsound
+import pyray
 import threading
 
 
@@ -14,7 +14,10 @@ class SoundService:
     def __init__(self, root_dir):
         """ Constructs a new SoundService. """
         self._root_dir = root_dir
+        self._load_sound = ""
 
+    def load_sound(self, sound):
+        return pyray.load_sound(f"{self._root_dir}\\{sound}")
 
     def play_sound(self, sound):
         """ Play a sound from the sounds directory. 
@@ -23,10 +26,6 @@ class SoundService:
             sound (string): The name of the sound file to be played.
         
         """
-        threading.Thread(target=playsound, args=(f"{self._root_dir}\\sounds\{sound}",), daemon=True).start()
-        # t = multiprocessing.Pool(processes=3)
-        # result = t.apply_async(func=winsound.PlaySound, args=(f"{self._root_dir}\sounds\{sound}", winsound.SND_ASYNC))
-        # t.close()
-        # t.join()
-        # print(f"{self._root_dir}\sounds\{sound}")
+        sound = load_sound(sound)
+        threading.Thread(target=pyray.play_sound, args=(f"{self._root_dir}\\sounds\{sound}",), daemon=True).start()
 
