@@ -11,7 +11,7 @@ import pyray
 import pyray
 
 
-class GameEndAction(Action):
+class GameOverAction(Action):
     """
     If the match point (11) has been reached by the left or right side then the game is over.
 
