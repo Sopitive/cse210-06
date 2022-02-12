@@ -19,7 +19,7 @@ from game.scripting.control_actors_action import ControlActorsAction
 from game.scripting.move_actors_action import MoveActorsAction
 from game.scripting.handle_collisions_action import HandleCollisionsAction
 from game.scripting.draw_actors_action import DrawActorsAction
-from game.scripting.game_end_action import GameEndAction
+from game.scripting.game_over_action import GameOverAction
 
 from game.directing.director import Director
 
