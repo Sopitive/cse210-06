@@ -30,6 +30,8 @@ class GameOverAction(Action):
         #the points needed to win the game, end game.
         self.match_point = 2 #it will be 10 but for testing use 2.
 
+        
+    #getting scores from rounds and determining if it has met "match_point" to signify to "_is_game_over" that the game is over.
     def _handle_round_over(self, cast):
         score_left, score_right = cast.get_actors("scores")
         if score_left or score_right == self.match_point:
@@ -37,6 +39,7 @@ class GameOverAction(Action):
         else:
             self._is_round_over = False
 
+            
 
     def _handle_game_over(self, cast):
         """Shows the 'game over' message and turns the paddles white if the game is over.
