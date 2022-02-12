@@ -44,10 +44,9 @@ def main():
 
     ball = Ball()
     ball.set_color(constants.WHITE)
-    ball.set_position(Point(constants.MAX_X // 2, random.randrange(10, constants.MAX_Y - 10))) 
+    ball.set_position(Point(constants.MAX_X // 2, random.randrange(10, constants.MAX_Y - 10)))
     ball.set_radius(constants.BALL_RADIUS)
     vel = Point(x,y).scale(constants.BALL_SPEED)
-    print(vel.get_x(), vel.get_y())
     ball.set_velocity(vel)
 
     cast = Cast()
@@ -63,21 +62,25 @@ def main():
     keyboard_service = KeyboardService()
     video_service = VideoService()
     sound_service = SoundService(constants.ROOT_DIR)
+    sound_service.add_sound("edges", "edges.wav")
+    sound_service.add_sound("paddles", "paddles.wav")
+    sound_service.add_sound("lost", "lost.wav")
 
     script = Script()
+    handle_collisions_action = HandleCollisionsAction()
     script.add_action("input", ControlPlayer2Action(keyboard_service))
     script.add_action("input", ControlPlayer1Action(keyboard_service))
     script.add_action("update", MoveActorsAction())
-    script.add_action("update", HandleCollisionsAction())
+    script.add_action("update", handle_collisions_action)
     script.add_action("output", DrawActorsAction(video_service))
-    script.add_action("output", PlaySoundsAction(sound_service))
+    script.add_action("output", PlaySoundsAction(sound_service, handle_collisions_action))
 
     score_left.set_position(Point(constants.MAX_X // 2 - 30, 10))
     score_left.set_text("0")
 
     score_right.set_position(Point(constants.MAX_X // 2 + 30, 10))
     score_right.set_text("0")
-    
+
     director = Director(video_service)
     director.start_game(cast, script)
 

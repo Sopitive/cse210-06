@@ -47,11 +47,11 @@ class ControlActorsAction(Action):
 
         # up
         if self.is_control_down("up"):
-            direction = Point(0, -constants.CELL_SIZE)
+            direction = Point(0, -constants.PADDLE_SPEED)
 
         # down
         if self.is_control_down("down"):
-            direction = Point(0, constants.CELL_SIZE)
+            direction = Point(0, constants.PADDLE_SPEED)
 
         paddle = self.get_paddle(cast)
         paddle.set_velocity(direction)
