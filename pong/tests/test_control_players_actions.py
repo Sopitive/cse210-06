@@ -16,6 +16,9 @@ class CustomKeyboardService:
         self.key = key
 
     def is_key_down(self, key):
+        """
+        tests to see if key is being pushed and gives the value of key
+        """
         return self.key == key
 
 
@@ -29,5 +32,5 @@ def test_control_player1_actions():
     action = ControlPlayer1Action(CustomKeyboardService("w"))
     action.execute(cast, None)
     paddle = action.get_paddle(cast)
-    assert paddle.get_velocity().equals(Point(0, -constants.CELL_SIZE))
+    assert paddle.get_velocity().equals(Point(0, -constants.PADDLE_SPEED))
 

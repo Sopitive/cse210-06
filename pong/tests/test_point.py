@@ -7,8 +7,14 @@ class Other():
         self._x = x
         self._y = y
     def get_x(self):
+        """
+        Gets the value of x
+        """
         return self._x
     def get_y(self):
+        """
+        Gets the value of y
+        """
         return self._y
 
 def test_point_equals_method():
