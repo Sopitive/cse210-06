@@ -34,9 +34,13 @@ class HandleCollisionsAction(Action):
         self._new_ball_y = constants.MAX_Y // 2
         self._round_timer = self._round_timer_start
 
-    def get_game_over(self):
-        """ Gets whether or not the game is over"""
-        return self._is_game_over
+    def set_is_game_over(self, value):
+        """ tells the collision handler whether the game is over
+
+        Args:
+            value (bool) whether or not the game is over
+        """
+        self._is_game_over = value
 
     def execute(self, cast, script):
         """Executes the handle collisions action.
@@ -48,8 +52,6 @@ class HandleCollisionsAction(Action):
         self._handle_ball_collision(cast)
         self._handle_round_over(cast)
         self._handle_delay(cast)
-        self._handle_game_over(cast)
-
 
     def _handle_ball_collision(self, cast):
         """ Handles whether the ball has collided with the wall or paddle.
@@ -62,7 +64,6 @@ class HandleCollisionsAction(Action):
 
         # Reference ball and paddles from cast
         ball = cast.get_first_actor("ball")
-
 
         hit = False
 
@@ -129,7 +130,6 @@ class HandleCollisionsAction(Action):
             self._paddle_scorer = "left"
             self._lost_round = True
 
-
     def _handle_delay(self, cast):
         """
         Delays the start of the round so the ball stays in the middle for 3 seconds in its new position.
@@ -142,8 +142,6 @@ class HandleCollisionsAction(Action):
             else:
                 ball = cast.get_first_actor("ball")
                 ball.set_position(Point(constants.MAX_X // 2, self._new_ball_y))
-
-
 
     def _handle_round_over(self, cast):
         """
@@ -158,37 +156,7 @@ class HandleCollisionsAction(Action):
             self._is_round_over = False
             self._is_delaying = True
             self._new_ball_y = random.randrange(10, constants.MAX_Y - 10)
-            #If game is over, set _game_is_over to True and select a winner
-            if score_left.get_points() == constants.WINNING_SCORE:
-                self._is_game_over = True
-                self.winner = 1
-            if score_right.get_points() == constants.WINNING_SCORE:
-                self._is_game_over = True
-                self.winner = 2
 
-
-    def _handle_game_over(self, cast):
-        """Shows the 'game over' message and turns the paddles white if the game is over.
-
-        Args:
-            cast (Cast): The cast of Actors in the game.
-        """
-        if self._is_game_over:
-
-            x = int(constants.MAX_X / 2)
-            y = int(constants.MAX_Y / 2)
-            position = Point(x, y)
-
-            message = Actor()
-            message.set_text(f"Game Over! Paddle {self.winner} won!")
-            message.set_position(position)
-            message.set_color(constants.RED)
-            message.set_font_size(40)
-            cast.add_actor("message", message)
-
-            paddles = cast.get_actors("paddles")
-            for paddle in paddles:
-                paddle.set_color(constants.BLACK)
 
     def get_paddle_collided(self):
         """

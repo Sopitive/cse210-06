@@ -73,6 +73,7 @@ def main():
     script.add_action("input", ControlPlayer1Action(keyboard_service))
     script.add_action("update", MoveActorsAction())
     script.add_action("update", handle_collisions_action)
+    script.add_action("update", GameOverAction(handle_collisions_action))
     script.add_action("output", DrawActorsAction(video_service))
     script.add_action("output", PlaySoundsAction(sound_service, handle_collisions_action))
 

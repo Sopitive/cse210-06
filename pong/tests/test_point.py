@@ -39,3 +39,13 @@ def test_point_scale_method():
     """Test scale() method in the point class"""
     point = Point(5,5).scale(5)
     assert point._x == 25 and point._y == 25
+
+def test_tuple_reflect():
+    """Test the to_tuple method in the Point class"""
+    assert Point(1,1).to_tuple() == (1, 1)
+
+def test_reflect_method():
+    """Test the reflect() method in the Point class"""
+    point = Point(-1,-1)
+    normal = Point(0,1)
+    assert point.reflect(normal).equals(Point(-1,1))
