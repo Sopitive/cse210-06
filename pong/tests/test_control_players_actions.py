@@ -3,6 +3,7 @@ A module for running tests on the players' actions for our paddle game.
 """
 from ctypes import cast
 import pytest
+import pyray
 import constants
 from game.shared.point import Point
 from game.scripting.control_player1_action import ControlPlayer1Action
@@ -13,6 +14,7 @@ from game.casting.paddle import Paddle
 from game.scripting.action import Action
 from game.services.keyboard_service import KeyboardService
 from game.casting.actor import Actor
+from game.scripting.control_player2_action import ControlPlayer2Action
 
 
 class CustomKeyboardService:
@@ -40,6 +42,24 @@ def test_control_player1_actions():
     action.execute(cast, None)
     paddle = action.get_paddle(cast)
     assert paddle.get_velocity().equals(Point(0, constants.PADDLE_SPEED))
+
+def test_control_player2_actions():
+    "This test asserts that the paddle for player 2 moved up one space when 'w' was pushed"
+    cast = Cast()
+    paddle1 = Paddle(Point(0, 0), constants.RED)
+    paddle2 = Paddle(Point(0, 0), constants.RED)
+    cast.add_actor("paddles", paddle1)
+    cast.add_actor("paddles", paddle2)
+
+    action = ControlPlayer2Action(CustomKeyboardService("i"))
+    action.execute(cast, None)
+    paddle2 = action.get_paddle(cast)
+    assert paddle2.get_velocity().equals(Point(0, -constants.PADDLE_SPEED))
+
+    action = ControlPlayer2Action(CustomKeyboardService("k"))
+    action.execute(cast, None)
+    paddle2 = action.get_paddle(cast)
+    assert paddle2.get_velocity().equals(Point(0, constants.PADDLE_SPEED))
 
 def test_action():
     """This test asserts the execute function of the Action class that raises a NotImplementedError"""
@@ -79,3 +99,11 @@ def test_cast_actors():
     assert len(cast.get_all_actors()) == 1
     cast.remove_actor("group", actor)
     assert len(cast.get_all_actors()) == 0
+
+def test_keyboard_sevice(monkeypatch):
+    """tests the methods in the keyboard service to see if key is up or down"""
+    keyboardservice = KeyboardService()
+    assert keyboardservice.is_key_up('w')
+
+    monkeypatch.setattr("pyray.is_key_down", lambda key: key == pyray.KEY_W)
+    assert keyboardservice.is_key_down('w')
